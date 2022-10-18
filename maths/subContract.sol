@@ -2,11 +2,11 @@
 
 pragma solidity >=0.7.0 <0.9.0;
 
-contract restContract {
+contract subContract {
     // Set result var
     uint result;
     // Set foo rest
-    function rest(uint _a, uint _b) public {
+    function sub(uint _a, uint _b) public {
         result = _a - _b; 
     }
     // Set foo getResult
