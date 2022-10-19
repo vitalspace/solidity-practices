@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello Dapp</title>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.8.0/web3.min.js"
+      integrity="sha512-bSQ2kf76XufUYS/4XinoHLp5S4lNOyRv0/x5UJACiOMy8ueqTNwRFfUZWmWpwnczjRp9SjiF1jrXbGEim7Y0Xg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </head>
+  <body>
+    <style>
+      .container {
+        text-align: center;
+      }
+
+      .boxes {
+        margin: 10px;
+      }
+
+      .button {
+        padding: 10px 20px;
+        color: white;
+        background: #0072ff;
+        border: none;
+        cursor: pointer;
+      }
+      .button:hover {
+        background: #6289b9;
+      }
+    </style>
+    <div class="container">
+      <div class="boxes">
+        <button id="login" class="button">Login</button>
+      </div>
+      <div class="boxes">
+        <button id="getmessage" class="button">Get Message</button>
+      </div>
+      <div>
+        <h1 id="message"></h1>
+      </div>
+    </div>
+
+    <script>
+      class App {
+        netWorkId = 5777;
+        contract_path = "./contract.json";
+        contract_address = "0x3FDFC2b6EB68b623d0CB9eB1Dfded1eFc2acBD76";
+
+        init = async () => {};
+
+        loadWeb3 = async () => {
+          if (window.ethereum) {
+            this.web3 = new Web3(window.web3.currentProvider);
+            await window.ethereum.request({ method: "eth_requestAccounts" });
+            await this.loadAccount();
+            // await this.loadContract();
+            return;
+          }
+          alert("Please Install MetaMask");
+        };
+
+        loadAccount = async () => {
+          const accounts = await window.ethereum.request({
+            method: "eth_requestAccounts",
+          });
+          this.account = accounts[0];
+          console.log(this.account);
+        };
+
+        checkNetWork = async () => {
+          const netId = await this.web3.eth.net.getId();
+          if (netId !== this.netWorkId)
+            return alert("Please set Ganache Network");
+        };
+
+        getContract = async () => {
+          await this.checkNetWork();
+          const request = await fetch(this.contract_path);
+          const data = await request.json();
+
+          const contract = new this.web3.eth.Contract(
+            data,
+            this.contract_address
+          );
+          return contract;
+        };
+
+        getMessage = async () => {
+          const contract = await this.getContract();
+          const message = await contract.methods.getMessage().call();
+          document.querySelector("#message").innerHTML = message;
+        };
+      }
+
+      const app = new App();
+      app.init();
+
+      document.querySelector("#login").addEventListener("click", async (e) => {
+        e.preventDefault();
+        app.loadWeb3();
+      });
+
+      document
+        .querySelector("#getmessage")
+        .addEventListener("click", async (e) => {
+          e.preventDefault();
+          app.getMessage();
+        });
+    </script>
+  </body>
+</html>
