@@ -13,7 +13,7 @@
     viewportComponent = views[component];
   };
 
-    updateViewportComponent(1);
+    updateViewportComponent(3);
   function evaluateButton() {
     updateViewportComponent(0);
   }

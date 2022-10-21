@@ -4,8 +4,8 @@
   const app = new App();
 
   let result: number;
-  let viewResult: bolean = false;
-  let noteUser: number;
+  let viewResult: boolean = false;
+  let noteUser: string;
 
   let userId: string = "";
 
